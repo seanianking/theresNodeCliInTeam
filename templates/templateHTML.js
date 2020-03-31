@@ -1,15 +1,15 @@
 //Borrowed from Modern-Viking then adjusted.
-function CardsHTML(teamMember) {
-    let employeeData;
+function cardsHTML(teamMember) {
+    let employeeInfo;
     switch(teamMember.getRole()) {
         case "Manager":
-            employeeData = `Office Number: ${teamMember.getOfficeNumber()}`;
+            employeeInfo = `Office Number: ${teamMember.getOfficeNumber()}`;
             break;
         case "Engineer":
-            employeeData = `GitHub Username: ${teamMember.getGithub()}`;
+            employeeInfo = `GitHub Username: ${teamMember.getGithub()}`;
             break;
         case "Intern":
-            employeeData = `School: ${teamMember.getSchool()}`;
+            employeeInfo = `School: ${teamMember.getSchool()}`;
             break;
         default:
             console.log("No butter, no Role");
@@ -38,7 +38,7 @@ function CardsHTML(teamMember) {
         </p>
         <p class="card-footer-item">
             <span>
-            ${employeeData}
+            ${employeeInfo}
             </span>
         </p>
     </footer>
@@ -82,5 +82,5 @@ return`<!doctype html>
 }
 module.exports = {
     generateHTML: generateHTML,
-    CardsHTML: CardsHTML
+    cardsHTML: cardsHTML
 };

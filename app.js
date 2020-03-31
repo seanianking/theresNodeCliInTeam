@@ -4,8 +4,11 @@ const Engineer = require("./lib/engineer.js");
 const Intern = require("./lib/intern.js");
 const fs = require("fs");
 const arrayOfCards = [];
-let CardsHTML = "";
+let teamCardsHTML = "";
 const generateHTML = ("./templates/templateHTML.js");
+const util = require("util");
+const writeFileAsync = util.promisify(fs.writeFile);
+
 
 
 //Start with prompts to get information:
@@ -95,35 +98,50 @@ function capitalize(string) {
 
 //Start async function to run inquire and gather data
 async function init() {
-    try {
-        let empSpecificData;
-        let { name } = await getName();
-        name = capitalize(name);
-        let { id } = await getId();
-        let { email } = await getEmail();
-        let { role } = await getRole();
-        switch (role) {
-            case "Manager":
-                empSpecificData = await getOfficeNumber();
-                let manager = new Manager(name, id, email, empSpecificData.officeNumber);
-                arrayOfCards.push(manager);
-                break;
-            case "Engineer":
-                empSpecificData = await getGithub();
-                let engineer = new Engineer(name, id, email, empSpecificData.username);
-                arrayOfCards.push(engineer);
-                break;
-            case "Intern":
-                empSpecificData = await getSchool();
-                let intern = new Intern(name, id, email, empSpecificData.school);
-                arrayOfCards.push(intern);
-                break;
+    let anotherEmployee = "Yes.";
+    do {
+        //Call functions to run prompts and get employee data
+        try {
+            let employeeInfo;
+            let { name } = await getName();
+            name = capitalize(name);
+            let { id } = await getId();
+            let { email } = await getEmail();
+            let { role } = await getRole();
+            //Pushes information to array and gathers information based off of input role
+            switch (role) {
+                case "Manager":
+                    employeeInfo = await getOfficeNumber();
+                    let manager = new Manager(name, id, email, employeeInfo.officeNumber);
+                    arrayOfCards.push(manager);
+                    break;
+                case "Engineer":
+                    employeeInfo = await getGithub();
+                    let engineer = new Engineer(name, id, email, employeeInfo.username);
+                    arrayOfCards.push(engineer);
+                    break;
+                case "Intern":
+                    employeeInfo = await getSchool();
+                    let intern = new Intern(name, id, email, employeeInfo.school);
+                    arrayOfCards.push(intern);
+                    break;
+            }
+            anotherEmployee = await addEmployees;
+        }
+        catch (err) {
+            console.log(err);
         }
 
     }
-    catch (err) {
-        console.log(err);
+    while (anotherEmployee.result === "Yes.");
+    //Generate cards
+    for (var i=0; i<arrayOfCards.length; i++){
+        let card = generateHTML.cardsHTML(teamCardsHTML[i]);
+        teamCardsHTML += card;    
     }
+    let HTML = generateHTML.generateHTML(teamCardsHTML);
+    writeFileAsync("./output/team.html", HTML)
+
 }
 
 init();
