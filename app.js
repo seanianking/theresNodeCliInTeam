@@ -9,7 +9,7 @@ const generateHTML = ("./templates/templateHTML.js");
 
 
 //Start with prompts to get information:
-function getSchool(){
+function getSchool() {
     const school = inquirer.prompt({
         type: "input",
         message: "Which school produced the intern?",
@@ -18,7 +18,7 @@ function getSchool(){
     return school;
 };
 
-function getOfficeNumber(){
+function getOfficeNumber() {
     const officeNumber = inquirer.prompt({
         type: "input",
         message: "What is the Manager's address?",
@@ -27,7 +27,7 @@ function getOfficeNumber(){
     return officeNumber;
 };
 
-function getOfficeGithub(){
+function getGithub() {
     const username = inquirer.prompt({
         type: "input",
         message: "GitHub username, please:",
@@ -36,16 +36,17 @@ function getOfficeGithub(){
     return username;
 };
 
-function getRole(){
+function getRole() {
     const role = inquirer.prompt({
-        type: "input",
+        type: "list",
+        name: "role",
         message: "What does the employee do?",
         choices: ["Manager", "Engineer", "Intern"]
     });
     return role;
 };
 
-function getEmail(){
+function getEmail() {
     const email = inquirer.prompt({
         type: "input",
         message: "Please input your company email:",
@@ -54,7 +55,7 @@ function getEmail(){
     return email;
 };
 
-function getId(){
+function getId() {
     const id = inquirer.prompt({
         type: "input",
         message: "What is the Employee's ID number?",
@@ -63,7 +64,7 @@ function getId(){
     return id;
 };
 
-function getName(){
+function getName() {
     const name = inquirer.prompt({
         type: "input",
         message: "Tell me, what are your first and last names?",
@@ -71,3 +72,58 @@ function getName(){
     });
     return name;
 };
+
+function addEmployees() {
+    const choice = inquirer.prompt({
+        type: "list",
+        name: "result",
+        message: "add another Employee",
+        choices: ["Yes.", "No."]
+    });
+    return choice;
+}
+
+//Ensure capitaliztion for name
+function capitalize(string) {
+    var splitString = string.toLowerCase().split(" ");
+    for (var i = 0; i < splitString.length; i++) {
+        splitString[i] =
+            splitString[i].charAt(0).toUpperCase() + splitString[i].substring(1);
+    }
+    return splitString.join(" ");
+};
+
+//Start async function to run inquire and gather data
+async function init() {
+    try {
+        let empSpecificData;
+        let { name } = await getName();
+        name = capitalize(name);
+        let { id } = await getId();
+        let { email } = await getEmail();
+        let { role } = await getRole();
+        switch (role) {
+            case "Manager":
+                empSpecificData = await getOfficeNumber();
+                let manager = new Manager(name, id, email, empSpecificData.officeNumber);
+                arrayOfCards.push(manager);
+                break;
+            case "Engineer":
+                empSpecificData = await getGithub();
+                let engineer = new Engineer(name, id, email, empSpecificData.username);
+                arrayOfCards.push(engineer);
+                break;
+            case "Intern":
+                empSpecificData = await getSchool();
+                let intern = new Intern(name, id, email, empSpecificData.school);
+                arrayOfCards.push(intern);
+                break;
+        }
+
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+init();
