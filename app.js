@@ -4,8 +4,8 @@ const Engineer = require("./lib/engineer.js");
 const Intern = require("./lib/intern.js");
 const fs = require("fs");
 const arrayOfCards = [];
-let teamCardsHTML = "";
-const generateHTML = ("./templates/templateHTML.js");
+let teamCardsHtml = "";
+const generateHtml = ("./templates/templateHTML.js");
 const util = require("util");
 const writeFileAsync = util.promisify(fs.writeFile);
 
@@ -24,7 +24,7 @@ function getSchool() {
 function getOfficeNumber() {
     const officeNumber = inquirer.prompt({
         type: "input",
-        message: "What is the Manager's address?",
+        message: "What is the Manager's office number?",
         name: "officeNumber"
     });
     return officeNumber;
@@ -96,6 +96,8 @@ function capitalize(string) {
     return splitString.join(" ");
 };
 
+init();
+
 //Start async function to run inquire and gather data
 async function init() {
     let anotherEmployee = "Yes.";
@@ -126,22 +128,18 @@ async function init() {
                     arrayOfCards.push(intern);
                     break;
             }
-            anotherEmployee = await addEmployees;
-        }
-        catch (err) {
+            anotherEmployee = await addEmployees();
+        } catch (err) {
             console.log(err);
         }
-
     }
     while (anotherEmployee.result === "Yes.");
     //Generate cards
-    for (var i=0; i<arrayOfCards.length; i++){
-        let card = generateHTML.cardsHTML(teamCardsHTML[i]);
-        teamCardsHTML += card;    
+    for (var i = 0; i < arrayOfCards.length; i++) {
+        let card = generateHtml.cardsHtml(arrayOfCards[i]);
+        teamCardsHtml += card;
     }
-    let HTML = generateHTML.generateHTML(teamCardsHTML);
-    writeFileAsync("./output/team.html", HTML)
-
+    let Html = generateHtml.generateHtml(teamCardsHtml);
+    writeFileAsync("./output/team.html", Html)
 }
 
-init();

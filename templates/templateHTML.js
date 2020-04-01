@@ -1,5 +1,5 @@
 //Borrowed from Modern-Viking then adjusted.
-function cardsHTML(teamMember) {
+function cardsHtml(teamMember) {
     let employeeInfo;
     switch(teamMember.getRole()) {
         case "Manager":
@@ -47,10 +47,10 @@ function cardsHTML(teamMember) {
 }
 
 
-function generateHTML(cards) {
+function generateHtml(cards) {
 
-return`<!doctype html>
-<html lang="en">
+return`<!doctype Html>
+<Html lang="en">
   <head>
     <title>Team Viewer</title>
     <meta charset="utf-8">
@@ -78,9 +78,9 @@ return`<!doctype html>
       ${cards}
       </div>
   </body>
-</html>`
+</Html>`
 }
 module.exports = {
-    generateHTML: generateHTML,
-    cardsHTML: cardsHTML
+    generateHtml: generateHtml,
+    cardsHtml: cardsHtml
 };
