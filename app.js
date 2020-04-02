@@ -5,7 +5,7 @@ const Intern = require("./lib/intern.js");
 const fs = require("fs");
 const arrayOfCards = [];
 let teamCardsHtml = "";
-const generateHtml = ("./templates/templateHTML.js");
+const generateHtml = require("./templates/templateHTML.js");
 const util = require("util");
 const writeFileAsync = util.promisify(fs.writeFile);
 
@@ -129,17 +129,20 @@ async function init() {
                     break;
             }
             anotherEmployee = await addEmployees();
-        } catch (err) {
+        }
+        catch(err) {
             console.log(err);
         }
     }
+    
     while (anotherEmployee.result === "Yes.");
     //Generate cards
+    console.log(arrayOfCards)
     for (var i = 0; i < arrayOfCards.length; i++) {
         let card = generateHtml.cardsHtml(arrayOfCards[i]);
         teamCardsHtml += card;
     }
     let Html = generateHtml.generateHtml(teamCardsHtml);
     writeFileAsync("./output/team.html", Html)
+    
 }
-
